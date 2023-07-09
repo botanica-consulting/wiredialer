@@ -1,13 +1,13 @@
-package wiredialer
+package main
 
 import (
 	log "github.com/sirupsen/logrus"
 	"io"
+        "fmt"
 	"os"
 
 	"net"
 	"net/http"
-	"net/netip"
 
 	"context"
 
@@ -43,8 +43,8 @@ func NewDialerFromFile(path string) (*WireDialer, error) {
     return NewDialerFromConfiguration(file)
 }
 
-func NewDialerFromConfiguration(config io.Reader) (*WireDialer, error) {
-	iface_addresses, dns_addresses, ipcConfig, err := config.ParseConfig(config)
+func NewDialerFromConfiguration(config_reader io.Reader) (*WireDialer, error) {
+	iface_addresses, dns_addresses, ipcConfig, err := config.ParseConfig(config_reader)
 	if err != nil {
 		return nil, err
 	}
@@ -69,3 +69,33 @@ func NewDialerFromConfiguration(config io.Reader) (*WireDialer, error) {
 		device: dev,
 	}, nil
 }
+
+func main() {
+    // Create a new Dialer based on a WireGuard configuration file
+    d, err := NewDialerFromFile("wg0.conf")
+    if err != nil {
+        fmt.Println(err)
+        os.Exit(1)
+    }
+
+    // Create a new HTTP client that uses the Dialer
+    client := &http.Client{
+        Transport: &http.Transport{
+            DialContext: d.DialContext,
+        },
+    }
+
+    // Make a request
+    resp, err := client.Get("http://ifconfig.co/city")
+    if err != nil {
+        fmt.Println(err)
+        os.Exit(1)
+    }
+    defer resp.Body.Close()
+
+    // Print the response body
+    io.Copy(os.Stdout, resp.Body)
+
+
+
+}   
