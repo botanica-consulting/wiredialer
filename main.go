@@ -1,0 +1,60 @@
+package main
+
+import (
+	log "github.com/sirupsen/logrus"
+	"io"
+	"os"
+
+	"net"
+	"net/http"
+	"net/netip"
+
+	"context"
+
+	"golang.zx2c4.com/wireguard/conn"
+	"golang.zx2c4.com/wireguard/device"
+	"golang.zx2c4.com/wireguard/tun"
+	"golang.zx2c4.com/wireguard/tun/netstack"
+)
+
+
+type WireDialer struct {
+	tun    tun.Device
+	tnet   *netstack.Net
+	device *device.Device
+}
+
+func (d *WireDialer) Dial(network, address string) (net.Conn, error) {
+	return d.tnet.Dial(network, address)
+}
+
+func (d *WireDialer) DialContext(ctx context.Context, network, address string) (net.Conn, error) {
+	return d.tnet.DialContext(ctx, network, address)
+}
+
+func fromConfig(config io.Reader) (*WireDialer, error) {
+	iface_addresses, dns_addresses, ipcConfig, err := parseConfig(config)
+	if err != nil {
+		return nil, err
+	}
+
+	tun, tnet, err := netstack.CreateNetTUN(
+		iface_addresses,
+		dns_addresses,
+		1420)
+	if err != nil {
+		log.Panic(err)
+	}
+	dev := device.NewDevice(tun, conn.NewDefaultBind(), device.NewLogger(device.LogLevelError, ""))
+	err = dev.IpcSet(ipcConfig)
+	err = dev.Up()
+	if err != nil {
+		log.Panic(err)
+	}
+
+	return &WireDialer{
+		tun:    tun,
+		tnet:   tnet,
+		device: dev,
+	}, nil
+}
