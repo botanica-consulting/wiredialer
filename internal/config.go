@@ -54,7 +54,7 @@ func (s ConfigSection) String() string {
 	}
 }
 
-func parseConfig(config io.Reader) (iface_addresses, dns_addresses []netip.Addr, ipcConfig string, err error) {
+func ParseConfig(config io.Reader) (iface_addresses, dns_addresses []netip.Addr, ipcConfig string, err error) {
 	var private_key_set, public_key_set, endpoint_set, allowed_ip_set bool
 	var interface_count, peer_count int
 	var current_section ConfigSection = NONE

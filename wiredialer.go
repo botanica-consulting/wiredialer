@@ -16,7 +16,7 @@ import (
 	"golang.zx2c4.com/wireguard/tun"
 	"golang.zx2c4.com/wireguard/tun/netstack"
 
-        "github.com/botanica-consulting/wiredialer/config"
+        "github.com/botanica-consulting/wiredialer/internal/config"
 )
 
 
@@ -44,7 +44,7 @@ func NewDialerFromFile(path string) (*WireDialer, error) {
 }
 
 func NewDialerFromConfiguration(config io.Reader) (*WireDialer, error) {
-	iface_addresses, dns_addresses, ipcConfig, err := parseConfig(config)
+	iface_addresses, dns_addresses, ipcConfig, err := config.ParseConfig(config)
 	if err != nil {
 		return nil, err
 	}
