@@ -1,4 +1,4 @@
-package main
+package wiredialer
 
 import (
 	log "github.com/sirupsen/logrus"
@@ -15,6 +15,8 @@ import (
 	"golang.zx2c4.com/wireguard/device"
 	"golang.zx2c4.com/wireguard/tun"
 	"golang.zx2c4.com/wireguard/tun/netstack"
+
+        "github.com/botanica-consulting/wiredialer/config"
 )
 
 
@@ -32,7 +34,16 @@ func (d *WireDialer) DialContext(ctx context.Context, network, address string) (
 	return d.tnet.DialContext(ctx, network, address)
 }
 
-func fromConfig(config io.Reader) (*WireDialer, error) {
+func NewDialerFromFile(path string) (*WireDialer, error) {
+    file, err := os.Open(path)
+    if err != nil {
+        return nil, err
+    }
+    defer file.Close()
+    return NewDialerFromConfiguration(file)
+}
+
+func NewDialerFromConfiguration(config io.Reader) (*WireDialer, error) {
 	iface_addresses, dns_addresses, ipcConfig, err := parseConfig(config)
 	if err != nil {
 		return nil, err
