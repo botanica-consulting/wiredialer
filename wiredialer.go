@@ -1,4 +1,4 @@
-package main
+package wiredialer
 
 import (
 	log "github.com/sirupsen/logrus"
