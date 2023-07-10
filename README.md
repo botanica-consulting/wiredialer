@@ -1,4 +1,4 @@
-# ☎️ WireDialer
+# <img src="https://user-images.githubusercontent.com/12571311/252341836-272e35e3-1295-49e6-b18b-888fa6f04861.png" alt="image" width="30"> WireDialer
 A usermode WireGuard client in an idiomatic Golang Dialer style, by [Botanica Software Labs](https://botanica.software)
 
 This is a simple utility library that provides an adapter between a typical WireGuard configuration file and the Golang `Dial` and `DialContext` functions.
