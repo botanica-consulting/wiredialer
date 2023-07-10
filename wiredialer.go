@@ -1,13 +1,11 @@
 package wiredialer
 
 import (
-	"fmt"
-	log "github.com/sirupsen/logrus"
+	"log"
 	"io"
 	"os"
 
 	"net"
-	"net/http"
 
 	"context"
 
@@ -43,7 +41,7 @@ func NewDialerFromFile(path string) (*WireDialer, error) {
 }
 
 func NewDialerFromConfiguration(config_reader io.Reader) (*WireDialer, error) {
-	iface_addresses, dns_addresses, ipcConfig, err := config.ParseConfig(config_reader)
+	iface_addresses, dns_addresses, mtu, ipcConfig, err := config.ParseConfig(config_reader)
 	if err != nil {
 		return nil, err
 	}
@@ -51,7 +49,7 @@ func NewDialerFromConfiguration(config_reader io.Reader) (*WireDialer, error) {
 	tun, tnet, err := netstack.CreateNetTUN(
 		iface_addresses,
 		dns_addresses,
-		1420)
+		mtu)
 	if err != nil {
 		log.Panic(err)
 	}
