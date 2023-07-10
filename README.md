@@ -1,9 +1,10 @@
-# WireDialer
-A usermode WireGuard client in an idiomatic Golang Dialer style.
+# ☎️ WireDialer
+A usermode WireGuard client in an idiomatic Golang Dialer style, by [Botanica Software Labs](https://botanica.software)
 
 This is a simple utility library that provides an adapter between a typical WireGuard configuration file and the Golang `Dial` and `DialContext` functions.
 
 A typical use case would be proxying specific connections in cases where you do not want to rely on OS configuration (i.e. routing) to ensure proper tunneling, for instance in security-sensitive contexts, or for masking your origin.
+
 
 # Example - HTTP client
 ```go
@@ -44,3 +45,5 @@ func main() {
 
 }
 ```
+
+Disclaimer: This library is not an official product, use freely at your own risk. 
