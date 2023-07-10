@@ -1,8 +1,8 @@
 package wiredialer
 
 import (
-    "testing"
-    "strings"
+	"strings"
+	"testing"
 )
 
 const VALID_CONFIG = `
@@ -18,11 +18,9 @@ Endpoint = 1.2.3.4:1234
 `
 
 func TestNewFromConfig(t *testing.T) {
-    reader := strings.NewReader(VALID_CONFIG)
-    _, err := NewDialerFromConfiguration(reader)
-    if err != nil {
-        t.Error(err)
-    }
+	reader := strings.NewReader(VALID_CONFIG)
+	_, err := NewDialerFromConfiguration(reader)
+	if err != nil {
+		t.Error(err)
+	}
 }
-
-

@@ -1,8 +1,8 @@
 package wiredialer
 
 import (
-	"log"
 	"io"
+	"log"
 	"os"
 
 	"net"
@@ -66,4 +66,3 @@ func NewDialerFromConfiguration(config_reader io.Reader) (*WireDialer, error) {
 		device: dev,
 	}, nil
 }
-
